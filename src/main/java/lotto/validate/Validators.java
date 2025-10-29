@@ -2,12 +2,7 @@ package lotto.validate;
 
 import lotto.message.ErrorMessage;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static lotto.config.LottoConstants.*;
-import static lotto.message.ErrorMessage.DUPLICATE_LOTTO_NUMBERS;
 
 public class Validators {
 
