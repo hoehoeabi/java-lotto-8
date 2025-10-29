@@ -16,4 +16,8 @@ public class LottoRepository {
     public List<Lotto> getLottos() {
         return lottos;
     }
+
+    public void clear() {
+        lottos.clear();
+    }
 }
