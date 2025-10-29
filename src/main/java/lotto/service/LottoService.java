@@ -52,8 +52,6 @@ public class LottoService {
         validator.validateNumbersInput(userLottoNumberInput);
 
         List<String> numberStrings = List.of(userLottoNumberInput.split(","));
-        validator.duplicateNumber(numberStrings);
-        validator.boundaryOfNumber(numberStrings);
 
         return numberStrings.stream()
                 .map(String::trim)

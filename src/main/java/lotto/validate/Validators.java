@@ -32,17 +32,4 @@ public class Validators {
         }
     }
 
-    public void duplicateNumber(List<String> numberStrings) {
-        Set<String> duplicateNumbers = new HashSet<>(numberStrings);
-        if (duplicateNumbers.size() != numberStrings.size()) {
-            throw new IllegalArgumentException(DUPLICATE_LOTTO_NUMBERS);
-        }
-    }
-
-    public void boundaryOfNumber(List<String> numberStrings) {
-        if(Integer.parseInt(numberStrings.getLast()) > MAX_LOTTO_NUMBER
-                || Integer.parseInt(numberStrings.getFirst()) < MIN_LOTTO_NUMBER){
-            throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBER_BOUNDRY_EXCEPTION);
-        }
-    }
 }

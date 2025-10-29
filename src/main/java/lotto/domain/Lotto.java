@@ -1,9 +1,15 @@
 package lotto.domain;
 
-import java.util.Collections;
-import java.util.List;
+import lotto.message.ErrorMessage;
 
-import static lotto.config.LottoConstants.LOTTO_NUMBER_COUNT;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static lotto.config.LottoConstants.*;
+import static lotto.message.ErrorMessage.DUPLICATE_LOTTO_NUMBERS;
+import static lotto.message.ErrorMessage.LOTTO_NUMBER_MAX_COUNT_EXCEPTION;
 
 public class Lotto {
     private final List<Integer> numbers;
@@ -15,7 +21,17 @@ public class Lotto {
 
     private void validate(List<Integer> numbers) {
         if (numbers.size() != LOTTO_NUMBER_COUNT) {
-            throw new IllegalArgumentException("[ERROR] 로또 번호는 6개여야 합니다.");
+            throw new IllegalArgumentException(LOTTO_NUMBER_MAX_COUNT_EXCEPTION);
+        }
+
+        Set<Integer> uniqueNumbers = new HashSet<>(numbers);
+        if (uniqueNumbers.size() != LOTTO_NUMBER_COUNT) {
+            throw new IllegalArgumentException(DUPLICATE_LOTTO_NUMBERS);
+        }
+
+        if(numbers.getLast() > MAX_LOTTO_NUMBER
+                || numbers.getFirst() < MIN_LOTTO_NUMBER){
+            throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBER_BOUNDRY_EXCEPTION);
         }
     }
 
