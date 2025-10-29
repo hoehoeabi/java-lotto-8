@@ -10,7 +10,7 @@ public interface OutPutView {
 
     void outputLottoAmount(int lottoAmount);
 
-    void outputLottoNumbers(List<Lotto> lottos);
+    void outputUserLottoNumbers(List<Lotto> userLottos);
 
     void outputwinningLottery(Map<LottoRank,Integer> results, double rewardRate);
 

@@ -21,8 +21,8 @@ public class Validators {
         return parsedAmount / 1000;
     }
 
-    public void validateNumbersInput(String userLottoNumberInput) {
-        if(!USER_LOTTO_NUMBERS_PATTERN.matcher(userLottoNumberInput).matches()){
+    public void validateNumbersInput(String lottoNumberInput) {
+        if(!USER_LOTTO_NUMBERS_PATTERN.matcher(lottoNumberInput).matches()){
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_NUMERS_FORMART);
         }
     }

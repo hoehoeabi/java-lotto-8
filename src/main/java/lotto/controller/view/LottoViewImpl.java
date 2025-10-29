@@ -26,8 +26,8 @@ public class LottoViewImpl implements LottoView {
     }
 
     @Override
-    public void outputLottoNumbers(List<Lotto> lottos) {
-        for (Lotto lotto : lottos) {
+    public void outputUserLottoNumbers(List<Lotto> userLottos) {
+        for (Lotto lotto : userLottos) {
             getNumbersByLotto(lotto);
         }
 

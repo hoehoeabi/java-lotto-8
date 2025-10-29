@@ -48,10 +48,10 @@ public class LottoService {
         return repository.getLottos();
     }
 
-    public Set<Integer> parseNumbersInput(String userLottoNumberInput) {
-        validator.validateNumbersInput(userLottoNumberInput);
+    public Set<Integer> parseNumbersInput(String lottoNumberInput) {
+        validator.validateNumbersInput(lottoNumberInput);
 
-        List<String> numberStrings = List.of(userLottoNumberInput.split(","));
+        List<String> numberStrings = List.of(lottoNumberInput.split(","));
 
         return numberStrings.stream()
                 .map(String::trim)
@@ -59,11 +59,11 @@ public class LottoService {
                 .collect(Collectors.toSet());
     }
 
-    public Map<LottoRank, Integer> calcReward(Set<Integer> userLottoNumber, String bounusNumber) {
+    public Map<LottoRank, Integer> calcReward(Set<Integer> lottoNumber, String bounusNumber) {
         int bonus = validator.validateAndParseNumber(bounusNumber);
         List<Lotto> lottos = repository.getLottos();
 
-        return LottoResultCalculator.calculateResults(lottos, userLottoNumber, bonus);
+        return LottoResultCalculator.calculateResults(lottos, lottoNumber, bonus);
     }
 
     public double calculateRateOfReturn(Map<LottoRank, Integer> results, int purchaseAmount) {

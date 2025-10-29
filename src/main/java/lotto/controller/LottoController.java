@@ -20,21 +20,21 @@ public class LottoController {
     }
 
     public void lotteryStart() {
-        String amount = view.inputAmountOfMoney();
+        String amount = view.inputAmountOfMoney(); // 0은 예외처리 해야함
 
         int quantity = service.calcQuantity(amount);
         view.outputLottoAmount(quantity);
 
         service.makeLottoNumbers(quantity);
-        List<Lotto> lottos = service.getAllLottos();
-        view.outputLottoNumbers(lottos);
+        List<Lotto> userLottos = service.getAllLottos();
+        view.outputUserLottoNumbers(userLottos);
 
-        String userLottoNumberInput = view.inputLottoNumber();
-        Set<Integer> userLottoNumber = service.parseNumbersInput(userLottoNumberInput);
+        String lottoNumberInput = view.inputLottoNumber();
+        Set<Integer> lottoNumber = service.parseNumbersInput(lottoNumberInput);
 
-        String bounusNumber = view.inputBonusNumber();
+        String bounusNumber = view.inputBonusNumber(); // lottoNumber 같으면 예외처리
 
-        Map<LottoRank,Integer> results = service.calcReward(userLottoNumber,bounusNumber);
+        Map<LottoRank,Integer> results = service.calcReward(lottoNumber,bounusNumber);
         double rewardRate = service.calculateRateOfReturn(results,Integer.parseInt(amount));
         view.outputwinningLottery(results,rewardRate);
 
