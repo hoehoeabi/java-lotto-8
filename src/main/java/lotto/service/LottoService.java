@@ -1,0 +1,73 @@
+package lotto.service;
+
+import camp.nextstep.edu.missionutils.Randoms;
+import lotto.domain.Lotto;
+import lotto.domain.LottoRank;
+import lotto.repository.LottoRepository;
+import lotto.util.calculator.LottoResultCalculator;
+import lotto.util.calculator.RateOfReturnCalculator;
+import lotto.validate.Validators;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class LottoService {
+
+    private final Validators validator;
+    private final LottoRepository repository;
+
+    public LottoService(Validators validator, LottoRepository repository) {
+        this.validator = validator;
+        this.repository = repository;
+    }
+
+    public int calcQuantity(String amount) {
+        int parsedAmount = validator.validateAndParseNumber(amount);
+        return validator.validateAndGetQuantity(parsedAmount);
+    }
+
+    public void makeLottoNumbers(int quantity) {
+        for(int i = 0; i < quantity; i++) {
+            repository.add(makeLotto());
+        }
+    }
+
+    private Lotto makeLotto(){
+        List<Integer> numbers = Randoms
+                .pickUniqueNumbersInRange(
+                        1, 45, 6);
+        Collections.sort(numbers);
+
+        return new Lotto(numbers);
+    }
+
+    public List<Lotto> getAllLottos() {
+        return repository.getLottos();
+    }
+
+    public Set<Integer> parseNumbersInput(String userLottoNumberInput) {
+        validator.validateNumbersInput(userLottoNumberInput);
+
+        List<String> numberStrings = List.of(userLottoNumberInput.split(","));
+        validator.duplicateNumber(numberStrings);
+        validator.boundaryOfNumber(numberStrings);
+
+        return numberStrings.stream()
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+    }
+
+    public Map<LottoRank, Integer> calcReward(Set<Integer> userLottoNumber, String bounusNumber) {
+        int bonus = validator.validateAndParseNumber(bounusNumber);
+        List<Lotto> lottos = repository.getLottos();
+
+        return LottoResultCalculator.calculateResults(lottos, userLottoNumber, bonus);
+    }
+
+    public double calculateRateOfReturn(Map<LottoRank, Integer> results, int purchaseAmount) {
+
+        return RateOfReturnCalculator.calculate(results, purchaseAmount);
+    }
+
+}
