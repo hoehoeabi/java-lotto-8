@@ -1,0 +1,48 @@
+package lotto.validate;
+
+import lotto.message.ErrorMessage;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static lotto.config.LottoConstants.*;
+import static lotto.message.ErrorMessage.DUPLICATE_LOTTO_NUMBERS;
+
+public class Validators {
+
+    public int validateAndParseNumber(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_NUMBER_FORMAT);
+        }
+    }
+
+    public int validateAndGetQuantity(int parsedAmount) {
+        if (parsedAmount % 1000 != 0){
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PURCHASE_AMOUNT_UNIT);
+        }
+        return parsedAmount / 1000;
+    }
+
+    public void validateNumbersInput(String userLottoNumberInput) {
+        if(!USER_LOTTO_NUMBERS_PATTERN.matcher(userLottoNumberInput).matches()){
+            throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_NUMERS_FORMART);
+        }
+    }
+
+    public void duplicateNumber(List<String> numberStrings) {
+        Set<String> duplicateNumbers = new HashSet<>(numberStrings);
+        if (duplicateNumbers.size() != numberStrings.size()) {
+            throw new IllegalArgumentException(DUPLICATE_LOTTO_NUMBERS);
+        }
+    }
+
+    public void boundaryOfNumber(List<String> numberStrings) {
+        if(Integer.parseInt(numberStrings.getLast()) > MAX_LOTTO_NUMBER
+                || Integer.parseInt(numberStrings.getFirst()) < MIN_LOTTO_NUMBER){
+            throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBER_BOUNDRY_EXCEPTION);
+        }
+    }
+}
