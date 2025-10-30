@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -60,6 +64,23 @@ class ValidatorsTest {
             assertDoesNotThrow(() -> validator.validateNumbersInput(input));
         }
 
+        @ParameterizedTest
+        @ValueSource(ints = {1, 2, 3,4})
+        @DisplayName("보너스 숫자와 로또 당첨번호 사이에 중복은 없다")
+        void validateBonusDuplication(int bonus){
+            // given
+            Set<Integer> lottoNumbers = new HashSet<>(List.of(5,6,7,8,9,10));
+
+            // when
+            validator.validateBonusDuplication(bonus,lottoNumbers);
+
+            // then
+            assertDoesNotThrow(() -> validator.validateBonusDuplication(bonus,lottoNumbers));
+
+        }
+
+
+
     }
 
     @Nested
@@ -94,6 +115,20 @@ class ValidatorsTest {
             assertThatThrownBy(()-> validator.validateNumbersInput(input))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining(ErrorMessage.INVALID_LOTTO_NUMERS_FORMART);
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {1, 2, 3,4})
+        @DisplayName("보너스 숫자와 로또 당첨번호 사이에 중복이 있다")
+        void validateBonusDuplication(int bonus){
+            // given
+            Set<Integer> lottoNumbers = new HashSet<>(List.of(1,2,3,4,5,6));
+
+            // when & then
+            assertThatThrownBy(()-> validator.validateBonusDuplication(bonus,lottoNumbers))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining(ErrorMessage.BONUS_NUMBER_CONTAINS_IN_LOTTO);
+
         }
 
     }
