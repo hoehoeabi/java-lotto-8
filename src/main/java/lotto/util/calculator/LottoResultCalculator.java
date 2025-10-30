@@ -15,11 +15,16 @@ public final class LottoResultCalculator {
     public static Map<LottoRank, Integer> calculateResults(
             List<Lotto> purchasedLottos, Set<Integer> winningNumbers, int bonusNumber) {
 
+        boolean isBonus;
+        int matches;
         Map<LottoRank, Integer> results = new EnumMap<>(LottoRank.class);
+
         initResultsMap(results);
 
         for (Lotto lotto : purchasedLottos) {
-            calculateHowManyCorrect(winningNumbers, lotto, bonusNumber, results);
+            isBonus = hasBonus(lotto,bonusNumber);
+            matches = howManyMatches(lotto,winningNumbers);
+            calculateLottoRank(isBonus,matches,results);
         }
 
         return results;
@@ -31,19 +36,27 @@ public final class LottoResultCalculator {
         }
     }
 
-    private static void calculateHowManyCorrect(
-            Set<Integer> winningNumbers, Lotto lotto, int bonus, Map<LottoRank, Integer> results) {
+    private static boolean hasBonus(Lotto lotto, int bonusNumber) {
+        return lotto.contains(bonusNumber);
+    }
 
-        int matchCount = (int) lotto.getNumbers()
+
+    private static int howManyMatches(Lotto lotto, Set<Integer> winningNumbers) {
+        return (int) lotto.getNumbers()
                 .stream()
                 .filter(winningNumbers::contains)
                 .count();
+    }
 
-        boolean hasBonus = lotto.contains(bonus);
-        LottoRank rank = LottoRank.valueOf(matchCount, hasBonus);
+    private static void calculateLottoRank(boolean isBonus
+            , int matches
+            , Map<LottoRank, Integer> results) {
+
+        LottoRank rank = LottoRank.valueOf(matches, isBonus);
 
         if (rank != LottoRank.MISS) {
             results.put(rank, results.get(rank) + 1);
         }
     }
+
 }
