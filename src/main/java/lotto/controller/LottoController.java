@@ -20,7 +20,7 @@ public class LottoController {
     }
 
     public void lotteryStart() {
-        String amount = view.inputAmountOfMoney(); // 0은 예외처리 해야함
+        String amount = view.inputAmountOfMoney();
 
         int quantity = service.calcQuantity(amount);
         view.outputLottoAmount(quantity);
@@ -32,7 +32,7 @@ public class LottoController {
         String lottoNumberInput = view.inputLottoNumber();
         Set<Integer> lottoNumber = service.parseNumbersInput(lottoNumberInput);
 
-        String bounusNumber = view.inputBonusNumber(); // lottoNumber 같으면 예외처리
+        String bounusNumber = view.inputBonusNumber();
 
         Map<LottoRank,Integer> results = service.calcReward(lottoNumber,bounusNumber);
         double rewardRate = service.calculateRateOfReturn(results,Integer.parseInt(amount));

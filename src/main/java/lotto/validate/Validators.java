@@ -2,7 +2,10 @@ package lotto.validate;
 
 import lotto.message.ErrorMessage;
 
+import java.util.Set;
+
 import static lotto.config.LottoConstants.*;
+import static lotto.message.ErrorMessage.BONUS_NUMBER_CONTAINS_IN_LOTTO;
 
 public class Validators {
 
@@ -11,6 +14,12 @@ public class Validators {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_NUMBER_FORMAT);
+        }
+    }
+
+    public void validateIsZero(int number) {
+        if (number == 0) {
+            throw new IllegalArgumentException(ErrorMessage.CANNOT_BE_ZERO);
         }
     }
 
@@ -27,4 +36,9 @@ public class Validators {
         }
     }
 
+    public void validateBonusDuplication(int bonus, Set<Integer> lottoNumbers) {
+        if (lottoNumbers.contains(bonus)) {
+            throw new IllegalArgumentException(BONUS_NUMBER_CONTAINS_IN_LOTTO);
+        }
+    }
 }

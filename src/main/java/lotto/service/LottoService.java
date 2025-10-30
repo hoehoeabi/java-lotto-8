@@ -23,6 +23,7 @@ public class LottoService {
 
     public int calcQuantity(String amount) {
         int parsedAmount = validator.validateAndParseNumber(amount);
+        validator.validateIsZero(parsedAmount);
         return validator.validateAndGetQuantity(parsedAmount);
     }
 
@@ -61,6 +62,8 @@ public class LottoService {
 
     public Map<LottoRank, Integer> calcReward(Set<Integer> lottoNumber, String bounusNumber) {
         int bonus = validator.validateAndParseNumber(bounusNumber);
+        validator.validateIsZero(bonus);
+        validator.validateBonusDuplication(bonus,lottoNumber);
         List<Lotto> lottos = repository.getLottos();
 
         return LottoResultCalculator.calculateResults(lottos, lottoNumber, bonus);
