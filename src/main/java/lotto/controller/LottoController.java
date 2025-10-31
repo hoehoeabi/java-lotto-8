@@ -20,23 +20,35 @@ public class LottoController {
     }
 
     public void lotteryStart() {
-        String amount = view.inputAmountOfMoney();
 
-        int quantity = service.calcQuantity(amount);
+        String amountInput = view.inputAmountOfMoney();
+        purchaseLottos(amountInput);
+
+        Set<Integer> winningNumbers = getWinningNumbers();
+        String bonusNumberInput = view.inputBonusNumber();
+
+        Map<LottoRank,Integer> results = service.calcReward(winningNumbers, bonusNumberInput);
+
+        showFinalResults(results, amountInput);
+    }
+
+    private void purchaseLottos(String amountInput) {
+        int quantity = service.calcQuantity(amountInput);
         view.outputLottoAmount(quantity);
 
         service.makeLottoNumbers(quantity);
         List<Lotto> userLottos = service.getAllLottos();
         view.outputUserLottoNumbers(userLottos);
+    }
 
+    private Set<Integer> getWinningNumbers() {
         String lottoNumberInput = view.inputLottoNumber();
-        Set<Integer> lottoNumber = service.parseNumbersInput(lottoNumberInput);
+        return service.parseNumbersInput(lottoNumberInput);
+    }
 
-        String bounusNumber = view.inputBonusNumber();
-
-        Map<LottoRank,Integer> results = service.calcReward(lottoNumber,bounusNumber);
-        double rewardRate = service.calculateRateOfReturn(results,Integer.parseInt(amount));
-        view.outputwinningLottery(results,rewardRate);
-
+    private void showFinalResults(Map<LottoRank,Integer> results, String amountInput) {
+        int purchaseAmount = Integer.parseInt(amountInput);
+        double rewardRate = service.calculateRateOfReturn(results, purchaseAmount);
+        view.outputwinningLottery(results, rewardRate);
     }
 }
