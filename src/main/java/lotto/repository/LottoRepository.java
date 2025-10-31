@@ -3,6 +3,7 @@ package lotto.repository;
 import lotto.domain.Lotto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LottoRepository {
@@ -14,7 +15,7 @@ public class LottoRepository {
     }
 
     public List<Lotto> getLottos() {
-        return lottos;
+        return Collections.unmodifiableList(lottos);
     }
 
     public void clear() {
