@@ -37,9 +37,7 @@ public class LottoService {
         List<Integer> numbers = Randoms
                 .pickUniqueNumbersInRange(
                         1, 45, 6);
-
         List<Integer> mutableNumbers = new ArrayList<>(numbers);
-
         Collections.sort(mutableNumbers);
 
         return new Lotto(mutableNumbers);
