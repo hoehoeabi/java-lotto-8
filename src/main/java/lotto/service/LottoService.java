@@ -1,24 +1,21 @@
 package lotto.service;
 
-import camp.nextstep.edu.missionutils.Randoms;
 import lotto.domain.Lotto;
 import lotto.domain.LottoRank;
-import lotto.repository.LottoRepository;
-import lotto.util.calculator.LottoResultCalculator;
-import lotto.util.calculator.RateOfReturnCalculator;
+import lotto.domain.LottoCollection;
 import lotto.validate.Validators;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class LottoService {
 
     private final Validators validator;
-    private final LottoRepository repository;
+    private LottoCollection purchasedLottos;
 
-    public LottoService(Validators validator, LottoRepository repository) {
+    public LottoService(Validators validator) {
         this.validator = validator;
-        this.repository = repository;
     }
 
     public int calcQuantity(String amount) {
@@ -28,23 +25,11 @@ public class LottoService {
     }
 
     public void makeLottoNumbers(int quantity) {
-        for(int i = 0; i < quantity; i++) {
-            repository.add(makeLotto());
-        }
-    }
-
-    private Lotto makeLotto(){
-        List<Integer> numbers = Randoms
-                .pickUniqueNumbersInRange(
-                        1, 45, 6);
-        List<Integer> mutableNumbers = new ArrayList<>(numbers);
-        Collections.sort(mutableNumbers);
-
-        return new Lotto(mutableNumbers);
+        this.purchasedLottos = LottoCollection.createLottos(quantity);
     }
 
     public List<Lotto> getAllLottos() {
-        return repository.getLottos();
+        return purchasedLottos.getLottos();
     }
 
     public Set<Integer> parseNumbersInput(String lottoNumberInput) {
@@ -62,14 +47,13 @@ public class LottoService {
         int bonus = validator.validateAndParseNumber(bounusNumber);
         validator.validateIsZero(bonus);
         validator.validateBonusDuplication(bonus,lottoNumber);
-        List<Lotto> lottos = repository.getLottos();
 
-        return LottoResultCalculator.calculateResults(lottos, lottoNumber, bonus);
+        return purchasedLottos.calculateResults(lottoNumber, bonus);
     }
 
     public double calculateRateOfReturn(Map<LottoRank, Integer> results, int purchaseAmount) {
 
-        return RateOfReturnCalculator.calculate(results, purchaseAmount);
+        return purchasedLottos.calculateRateOfReturn(results, purchaseAmount);
     }
 
 }
