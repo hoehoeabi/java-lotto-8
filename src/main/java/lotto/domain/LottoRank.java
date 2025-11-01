@@ -22,22 +22,13 @@ public enum LottoRank {
      * 일치 개수와 보너스 여부를 받아 적절한 LottoRank를 반환합니다.
      */
     public static LottoRank valueOf(int matchCount, boolean hasBonus) {
-        // 6개 일치
-        if (matchCount == FIRST.matchCount) {
-            return FIRST;
+
+        // 5개 일치 + 보너스
+        if (matchCount == SECOND.matchCount && hasBonus) {
+            return SECOND;
         }
 
-        // 5개 일치
-        if (matchCount == SECOND.matchCount) {
-            if (hasBonus) {
-
-                return SECOND;
-            }
-
-            return THIRD;
-        }
-
-        // 3, 4개 일치 (MISS는 0, 1, 2)
+        // 6, 5(보너스 X), 4, 3개 일치 및 MISS 처리
         return Arrays.stream(values())
                 .filter(rank ->
                         rank.matchCount == matchCount
