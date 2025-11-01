@@ -1,8 +1,8 @@
 package lotto.service;
 
 import lotto.domain.Lotto;
+import lotto.domain.LottoCollection;
 import lotto.domain.LottoRank;
-import lotto.repository.LottoRepository;
 import lotto.validate.Validators;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,20 +16,19 @@ import java.util.Map;
 import java.util.Set;
 
 import static lotto.domain.LottoRank.*;
-import static org.assertj.core.api.Assertions.assertThat; // AssertionsForClassTypes -> Assertions
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("LottoService 단위 테스트")
 class LottoServiceTest {
 
-    LottoRepository repository;
+    LottoCollection purchasedLottos;
     Validators validator;
     LottoService service;
 
     @BeforeEach
     void setUp() {
-        repository = new LottoRepository();
         validator = new Validators();
-        service = new LottoService(validator, repository);
+        service = new LottoService(validator);
     }
 
     @Nested
@@ -44,7 +43,7 @@ class LottoServiceTest {
             service.makeLottoNumbers(input);
 
             // then
-            assertThat(repository.getLottos().size()).isEqualTo(input);
+            assertThat(service.getAllLottos().size()).isEqualTo(input);
         }
 
         @ParameterizedTest
@@ -69,19 +68,23 @@ class LottoServiceTest {
         @BeforeEach
         void setupRewardData() {
             // given
-            Set<Integer> userLottoNumbers = Set.of(1, 2, 3, 4, 5, 6);
-            String bonus = "7";
+            List<Lotto> testLottos = List.of(
+                    new Lotto(List.of(1, 2, 3, 4, 5, 6)), // 1등
+                    new Lotto(List.of(1, 2, 3, 4, 5, 7)), // 2등
+                    new Lotto(List.of(1, 2, 3, 4, 5, 8)), // 3등
+                    new Lotto(List.of(1, 2, 3, 4, 8, 9)), // 4등
+                    new Lotto(List.of(1, 2, 3, 8, 9, 10)), // 5등
+                    new Lotto(List.of(1, 2, 8, 9, 10, 11)), // 꽝
+                    new Lotto(List.of(1, 2, 8, 9, 10, 11)), // 꽝
+                    new Lotto(List.of(1, 2, 8, 9, 10, 11))  // 꽝
+            );
+            LottoCollection fixedLottos = new LottoCollection(testLottos);
 
-            repository.add(new Lotto(List.of(1, 2, 3, 4, 5, 6))); // 1등
-            repository.add(new Lotto(List.of(1, 2, 3, 4, 5, 7))); // 2등
-            repository.add(new Lotto(List.of(1, 2, 3, 4, 5, 8))); // 3등
-            repository.add(new Lotto(List.of(1, 2, 3, 4, 8, 9))); // 4등
-            repository.add(new Lotto(List.of(1, 2, 3, 8, 9, 10))); // 5등
-            repository.add(new Lotto(List.of(1, 2, 8, 9, 10, 11))); // 꽝
-            repository.add(new Lotto(List.of(1, 2, 8, 9, 10, 11))); // 꽝
-            repository.add(new Lotto(List.of(1, 2, 8, 9, 10, 11))); // 꽝
+            service.setPurchasedLottos(fixedLottos);
 
             // when
+            Set<Integer> userLottoNumbers = Set.of(1, 2, 3, 4, 5, 6);
+            String bonus = "7";
             this.lottoResult = service.calcReward(userLottoNumbers, bonus);
         }
 
@@ -94,7 +97,7 @@ class LottoServiceTest {
             assertThat(lottoResult.get(THIRD)).isEqualTo(1);
             assertThat(lottoResult.get(FOURTH)).isEqualTo(1);
             assertThat(lottoResult.get(FIFTH)).isEqualTo(1);
-            assertThat(lottoResult.get(MISS)).isEqualTo(0);
+            assertThat(lottoResult.get(MISS)).isEqualTo(3);
         }
 
         @Test
