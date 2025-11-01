@@ -38,7 +38,7 @@ public class LottoCollection {
         return new Lotto(mutableNumbers);
     }
 
-    public  Map<LottoRank, Integer> calculateResults(Set<Integer> winningNumbers, int bonusNumber) {
+    public Map<LottoRank, Integer> calculateResults(Set<Integer> winningNumbers, int bonusNumber) {
 
         Map<LottoRank, Integer> results = new EnumMap<>(LottoRank.class);
 
@@ -46,10 +46,7 @@ public class LottoCollection {
 
         for (Lotto lotto : lottos) {
             LottoRank rank = lotto.determineRank(winningNumbers,bonusNumber);
-
-            if (rank != LottoRank.MISS) {
-                results.put(rank, results.get(rank) + 1);
-            }
+            results.put(rank, results.get(rank) + 1);
         }
 
         return results;
