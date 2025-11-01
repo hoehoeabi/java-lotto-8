@@ -38,22 +38,18 @@ public class LottoCollection {
         return new Lotto(mutableNumbers);
     }
 
-    public void clear() {
-        lottos.clear();
-    }
-
     public  Map<LottoRank, Integer> calculateResults(Set<Integer> winningNumbers, int bonusNumber) {
 
-        boolean isBonus;
-        int matches;
         Map<LottoRank, Integer> results = new EnumMap<>(LottoRank.class);
 
         initResultsMap(results);
 
         for (Lotto lotto : lottos) {
-            isBonus = hasBonus(lotto,bonusNumber);
-            matches = howManyMatches(lotto,winningNumbers);
-            calculateAndPutLottoRank(isBonus,matches,results);
+            LottoRank rank = lotto.determineRank(winningNumbers,bonusNumber);
+
+            if (rank != LottoRank.MISS) {
+                results.put(rank, results.get(rank) + 1);
+            }
         }
 
         return results;
@@ -62,29 +58,6 @@ public class LottoCollection {
     private static void initResultsMap(Map<LottoRank, Integer> results) {
         for (LottoRank rank : LottoRank.values()) {
             results.put(rank, 0);
-        }
-    }
-
-    private static boolean hasBonus(Lotto lotto, int bonusNumber) {
-        return lotto.contains(bonusNumber);
-    }
-
-
-    private static int howManyMatches(Lotto lotto, Set<Integer> winningNumbers) {
-        return (int) lotto.getNumbers()
-                .stream()
-                .filter(winningNumbers::contains)
-                .count();
-    }
-
-    private static void calculateAndPutLottoRank(boolean isBonus
-            , int matches
-            , Map<LottoRank, Integer> results) {
-
-        LottoRank rank = LottoRank.valueOf(matches, isBonus);
-
-        if (rank != LottoRank.MISS) {
-            results.put(rank, results.get(rank) + 1);
         }
     }
 
@@ -97,5 +70,9 @@ public class LottoCollection {
             return 0.0;
         }
         return (double) totalPrize / purchaseAmount * 100.0;
+    }
+
+    public void clear() {
+        lottos.clear();
     }
 }

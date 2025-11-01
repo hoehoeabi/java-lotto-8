@@ -54,4 +54,13 @@ public class Lotto {
     public boolean contains(Integer number) {
         return numbers.contains(number);
     }
+
+    public LottoRank determineRank(Set<Integer> winningNumbers, int bonusNumber) {
+        int matchCount = (int) this.numbers.stream()
+                .filter(winningNumbers::contains)
+                .count();
+        boolean hasBonus = this.numbers.contains(bonusNumber);
+
+        return LottoRank.valueOf(matchCount, hasBonus);
+    }
 }
