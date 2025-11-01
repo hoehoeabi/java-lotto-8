@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class LottoService {
 
     private final Validators validator;
-    private LottoCollection purchasedLottos;
 
     public LottoService(Validators validator) {
         this.validator = validator;
@@ -24,12 +23,12 @@ public class LottoService {
         return validator.validateAndGetQuantity(parsedAmount);
     }
 
-    public void makeLottoNumbers(int quantity) {
-        this.purchasedLottos = LottoCollection.createLottos(quantity);
+    public LottoCollection makeLottoNumbers(int quantity) {
+        return LottoCollection.createLottos(quantity);
     }
 
-    public List<Lotto> getAllLottos() {
-        return purchasedLottos.getLottos();
+    public List<Lotto> getAllLottos(LottoCollection purchaseLottos) {
+        return purchaseLottos.getLottos();
     }
 
     public Set<Integer> parseNumbersInput(String lottoNumberInput) {
@@ -43,25 +42,17 @@ public class LottoService {
                 .collect(Collectors.toSet());
     }
 
-    public Map<LottoRank, Integer> calcReward(Set<Integer> lottoNumber, String bounusNumber) {
+    public Map<LottoRank, Integer> calcReward(Set<Integer> lottoNumber, String bounusNumber,LottoCollection purchaseLottos) {
         int bonus = validator.validateAndParseNumber(bounusNumber);
         validator.validateIsZero(bonus);
         validator.validateBonusDuplication(bonus,lottoNumber);
 
-        return purchasedLottos.calculateResults(lottoNumber, bonus);
+        return purchaseLottos.calculateResults(lottoNumber, bonus);
     }
 
-    public double calculateRateOfReturn(Map<LottoRank, Integer> results, int purchaseAmount) {
+    public double calculateRateOfReturn(Map<LottoRank, Integer> results, int purchaseAmount, LottoCollection purchaseLottos) {
 
-        return purchasedLottos.calculateRateOfReturn(results, purchaseAmount);
-    }
-
-    // 테스트를 위한 setter 메서드
-    // Mockito 없이 서비스 단위테스트 하려니까 너무 힘드네요.
-    // 다른분들은 어떻게 하셨는지 참 궁금합니다.
-    // 더 나은 방법이 있었다면 리뷰때 적어주시면 감사하겠습니다!
-    public void setPurchasedLottos(LottoCollection purchasedLottos) {
-        this.purchasedLottos = purchasedLottos;
+        return purchaseLottos.calculateRateOfReturn(results, purchaseAmount);
     }
 
 }
