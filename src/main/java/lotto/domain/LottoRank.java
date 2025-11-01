@@ -29,7 +29,12 @@ public enum LottoRank {
 
         // 5개 일치
         if (matchCount == SECOND.matchCount) {
-            return hasBonus ? SECOND : THIRD;
+            if (hasBonus) {
+
+                return SECOND;
+            }
+
+            return THIRD;
         }
 
         // 3, 4개 일치 (MISS는 0, 1, 2)
