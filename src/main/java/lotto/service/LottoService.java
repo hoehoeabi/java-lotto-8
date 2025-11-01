@@ -56,4 +56,12 @@ public class LottoService {
         return purchasedLottos.calculateRateOfReturn(results, purchaseAmount);
     }
 
+    // 테스트를 위한 setter 메서드
+    // Mockito 없이 서비스 단위테스트 하려니까 너무 힘드네요.
+    // 다른분들은 어떻게 하셨는지 참 궁금합니다.
+    // 더 나은 방법이 있었다면 리뷰때 적어주시면 감사하겠습니다!
+    public void setPurchasedLottos(LottoCollection purchasedLottos) {
+        this.purchasedLottos = purchasedLottos;
+    }
+
 }
